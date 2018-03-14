@@ -71,7 +71,7 @@ class Player {
     detectHit(x, y) {
         // tell the main program that a hit occurred
         // if not close - not a hit
-        return dist(x, y, this.xPos, this.yPos) < 50;
+        return dist(x, y, this.xPos, this.yPos) < this.size;
     }
 }
 
@@ -105,16 +105,24 @@ class Blob {
     }
 
     getInitialXPos() {
-        return 50;
+        if (this.direction == HORIZONTAL) {
+            return flipCoin() ? -100 : 0;
+        }
+
+        return random(0, 500)
     }
 
     getInitialYPos() {
-        return 50;
+        if (this.direction == HORIZONTAL) {
+            return random(0, 500)
+        }
+
+        return flipCoin() ? -100 : 0;
     }
 
     display() {
         imageMode(CENTER);
-        fill(255, 255, 255);
+        fill(this.color);
         ellipse(this.xPos, this.yPos, 20, 20);
     }
 
