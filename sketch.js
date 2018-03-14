@@ -83,9 +83,11 @@ class Player {
     }
 
     detectHit(blob) {
+        // check the size of the bigger one
+        var size = blob.size > this.size ? blob.size : this.size;
         // tell the main program that a hit occurred
         // if not close - not a hit
-        return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < this.size;
+        return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < size;
     }
 }
 
