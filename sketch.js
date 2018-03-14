@@ -161,13 +161,10 @@ class Blob {
     update() {
         if (this.direction == HORIZONTAL) {
             // update x position for horizontally moving blob
-
             this.xPos += this.speed * this.xDir;
-            // if it hits the wall, remove it from array?
         } else {
             // update y position for vertically moving blob
             this.yPos += this.speed * this.yDir;
-            // if it hits the wall, remove it from array?
         }
     }
 
