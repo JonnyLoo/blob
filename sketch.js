@@ -15,6 +15,7 @@ var VERTICAL = "vertical";
 
 // points
 var points = 0;
+var shouldUpdatePoints = false;
 
 function setup() {
     myCanvas = createCanvas(500, 500);
@@ -43,8 +44,16 @@ function draw() {
 
         var isHit = player.detectHit(blob);
 
-        if (isHit || blob.isOffscreen()) {
-            points += isHit ? 1 : 0
+        if (isHit && blob.size >= player.size) {
+            // player is eaten by the blob
+            points--;
+            player.restart();
+        }
+
+        var shouldUpdatePoints = isHit && blob.size < player.size;
+
+        if (shouldUpdatePoints || blob.isOffscreen()) {
+            points += shouldUpdatePoints ? 1 : 0
             blobs.splice(i, 1)
             i--;
             blobCount--;
@@ -57,7 +66,7 @@ class Player {
         this.xPos = x;
         this.yPos = y;
         this.state = 0; //if lost or not
-        this.size = 20;
+        this.size = 30;
         this.speed = 2;
     }
 
@@ -88,6 +97,12 @@ class Player {
         // tell the main program that a hit occurred
         // if not close - not a hit
         return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < size;
+    }
+
+    restart() {
+        this.xPos = 250;
+        this.yPos = 250;
+        this.size--;
     }
 }
 
