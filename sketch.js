@@ -68,16 +68,16 @@ class Player {
     }
 
     update() {
-        if (keyIsDown(UP_ARROW)) {
+        if (keyIsDown(UP_ARROW) && this.yPos > (0 + this.size / 2)) {
             this.yPos -= this.speed;
         }
-        if (keyIsDown(DOWN_ARROW)) {
+        if (keyIsDown(DOWN_ARROW) && this.yPos < (500 - this.size / 2)) {
             this.yPos += this.speed;
         }
-        if (keyIsDown(LEFT_ARROW)) {
+        if (keyIsDown(LEFT_ARROW) && this.xPos > (0 + this.size / 2)) {
             this.xPos -= this.speed;
         }
-        if (keyIsDown(RIGHT_ARROW)) {
+        if (keyIsDown(RIGHT_ARROW) && this.xPos < (500 - this.size / 2)) {
             this.xPos += this.speed;
         }
     }
