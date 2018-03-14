@@ -13,6 +13,9 @@ var blobCount = 20;
 var HORIZONTAL = "horizontal";
 var VERTICAL = "vertical";
 
+// points
+var points = 0;
+
 function setup() {
     myCanvas = createCanvas(500, 500);
     myCanvas.parent("game-container");
@@ -37,6 +40,15 @@ function draw() {
         blob = blobs[i];
         blob.update();
         blob.display();
+
+        var isHit = player.detectHit(blob);
+
+        if (isHit || blob.isOffscreen()) {
+            points += isHit ? 1 : 0
+            blobs.splice(i, 1)
+            i--;
+            blobCount--;
+        }
     }
 }
 
@@ -70,10 +82,10 @@ class Player {
         }
     }
 
-    detectHit(x, y) {
+    detectHit(blob) {
         // tell the main program that a hit occurred
         // if not close - not a hit
-        return dist(x, y, this.xPos, this.yPos) < this.size;
+        return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < this.size;
     }
 }
 
@@ -86,6 +98,7 @@ class Blob {
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
         this.speed = random(0.1, 3);
+        this.size = int(random(10, 50));
     }
 
     getInitialXDir() {
@@ -125,7 +138,7 @@ class Blob {
     display() {
         imageMode(CENTER);
         fill(this.color);
-        ellipse(this.xPos, this.yPos, 20, 20);
+        ellipse(this.xPos, this.yPos, this.size, this.size);
     }
 
     update() {
@@ -139,6 +152,22 @@ class Blob {
             this.yPos += this.speed * this.yDir;
             // if it hits the wall, remove it from array?
         }
+    }
+
+    isOffscreen() {
+        if (this.xDir == 1 && this.xPos >= 500)
+            return true
+
+        if (this.xDir == -1 && this.xPos <= 0)
+            return true
+
+        if (this.yDir == 1 && this.yPos >= 500)
+            return true
+
+        if (this.yDir == -1 && this.yPos <= 0)
+            return true
+
+        return false
     }
 }
 
