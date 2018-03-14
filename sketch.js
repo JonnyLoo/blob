@@ -7,6 +7,7 @@ var player;
 
 // array to store blobs
 var blobs = [];
+var blobCount = 20;
 
 // direction
 var HORIZONTAL = "horizontal";
@@ -19,7 +20,7 @@ function setup() {
 
     player = new Player(250, 250);
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < blobCount; i++) {
         var blob = new Blob();
         blobs.push(blob);
     }
@@ -32,7 +33,7 @@ function draw() {
     player.update();
     player.display();
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < blobCount; i++) {
         blob = blobs[i];
         blob.update();
         blob.display();
@@ -45,6 +46,7 @@ class Player {
         this.yPos = y;
         this.state = 0; //if lost or not
         this.size = 20;
+        this.speed = 2;
     }
 
     display() {
@@ -55,16 +57,16 @@ class Player {
 
     update() {
         if (keyIsDown(UP_ARROW)) {
-            this.yPos -= 1;
+            this.yPos -= this.speed;
         }
         if (keyIsDown(DOWN_ARROW)) {
-            this.yPos += 1;
+            this.yPos += this.speed;
         }
         if (keyIsDown(LEFT_ARROW)) {
-            this.xPos -= 1;
+            this.xPos -= this.speed;
         }
         if (keyIsDown(RIGHT_ARROW)) {
-            this.xPos += 1;
+            this.xPos += this.speed;
         }
     }
 
@@ -83,7 +85,7 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
-        this.speed = random(2, 5);
+        this.speed = random(0.1, 3);
     }
 
     getInitialXDir() {
