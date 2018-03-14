@@ -13,124 +13,125 @@ var HORIZONTAL = "horizontal";
 var VERTICAL = "vertical";
 
 function setup() {
-	myCanvas = createCanvas(500, 500);
-	myCanvas.parent("game-container");
-	background(0);
+    myCanvas = createCanvas(500, 500);
+    myCanvas.parent("game-container");
+    background(0);
 
-	player = new Player(250, 250);
+    player = new Player(250, 250);
 
-	for (var i = 0; i < 10; i++) {
-		var blob = new Blob();
-		blobs.push(blob);
-	}
+    for (var i = 0; i < 10; i++) {
+        var blob = new Blob();
+        blobs.push(blob);
+    }
 }
+
 function preload() {}
 
 function draw() {
-	background(0);
-	player.update();
-	player.display();
+    background(0);
+    player.update();
+    player.display();
 
-	for (var i = 0; i < 10; i++) {
-		blob = blobs[i];
-		blob.update();
-		blob.display();
-	}
+    for (var i = 0; i < 10; i++) {
+        blob = blobs[i];
+        blob.update();
+        blob.display();
+    }
 }
 
 class Player {
-	constructor(x, y) {
-		this.xPos = x;
-		this.yPos = y;
-		this.state = 0; //if lost or not
-		this.size = 20;
-	}
+    constructor(x, y) {
+        this.xPos = x;
+        this.yPos = y;
+        this.state = 0; //if lost or not
+        this.size = 20;
+    }
 
-	display() {
-		imageMode(CENTER);
-		fill(255, 255, 255);
-		ellipse(this.xPos, this.yPos, this.size, this.size);
-	}
+    display() {
+        imageMode(CENTER);
+        fill(255, 255, 255);
+        ellipse(this.xPos, this.yPos, this.size, this.size);
+    }
 
-	update() {
-		if (keyIsDown(UP_ARROW)) {
-			this.yPos -= 1;
-		}
-		if (keyIsDown(DOWN_ARROW)) {
-			this.yPos += 1;
-		}
-		if (keyIsDown(LEFT_ARROW)) {
-			this.xPos -= 1;
-		}
-		if (keyIsDown(RIGHT_ARROW)) {
-			this.xPos += 1;
-		}
-	}
+    update() {
+        if (keyIsDown(UP_ARROW)) {
+            this.yPos -= 1;
+        }
+        if (keyIsDown(DOWN_ARROW)) {
+            this.yPos += 1;
+        }
+        if (keyIsDown(LEFT_ARROW)) {
+            this.xPos -= 1;
+        }
+        if (keyIsDown(RIGHT_ARROW)) {
+            this.xPos += 1;
+        }
+    }
 
-	detectHit(x, y) {
-		// tell the main program that a hit occurred
-		// if not close - not a hit
-		return dist(x, y, this.xPos, this.yPos) < 50;
-	}
+    detectHit(x, y) {
+        // tell the main program that a hit occurred
+        // if not close - not a hit
+        return dist(x, y, this.xPos, this.yPos) < 50;
+    }
 }
 
 class Blob {
-	constructor() {
-		this.color = color("red");
-		this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
-		this.xPos = this.getInitialXPos();
-		this.yPos = this.getInitialYPos();
-		this.xDir = this.getInitialXDir();
-		this.yDir = this.getInitialYDir();
-		this.speed = random(2, 5);
-	}
+    constructor() {
+        this.color = color("red");
+        this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
+        this.xPos = this.getInitialXPos();
+        this.yPos = this.getInitialYPos();
+        this.xDir = this.getInitialXDir();
+        this.yDir = this.getInitialYDir();
+        this.speed = random(2, 5);
+    }
 
-	getInitialXDir() {
-		if (this.direction == HORIZONTAL) {
-			// either move towards the right or towards the left
-			return flipCoin() ? 1 : -1;
-		}
+    getInitialXDir() {
+        if (this.direction == HORIZONTAL) {
+            // either move towards the right or towards the left
+            return flipCoin() ? 1 : -1;
+        }
 
-		return 1;
-	}
+        return 1;
+    }
 
-	getInitialYDir() {
-		if (this.direction == HORIZONTAL) {
-			return 1;
-		}
+    getInitialYDir() {
+        if (this.direction == HORIZONTAL) {
+            return 1;
+        }
 
-		// either move upwards or downwards
-		return flipCoin() ? 1 : -1;
-	}
+        // either move upwards or downwards
+        return flipCoin() ? 1 : -1;
+    }
 
-	getInitialXPos() {
-		return 50;
-	}
+    getInitialXPos() {
+        return 50;
+    }
 
-	getInitialYPos() {
-		return 50;
-	}
+    getInitialYPos() {
+        return 50;
+    }
 
-	display() {
-		imageMode(CENTER);
-		fill(255, 255, 255);
-		ellipse(this.xPos, this.yPos, 20, 20);
-	}
+    display() {
+        imageMode(CENTER);
+        fill(255, 255, 255);
+        ellipse(this.xPos, this.yPos, 20, 20);
+    }
 
-	update() {
-		if (this.direction == HORIZONTAL) {
-			// update x position for horizontally moving blob
+    update() {
+        if (this.direction == HORIZONTAL) {
+            // update x position for horizontally moving blob
 
-			this.xPos += this.speed * this.xDir;
-			// if it hits the wall, remove it from array?
-		} else {
-			// update y position for vertically moving blob
-			this.yPos += this.speed * this.yDir;
-			// if it hits the wall, remove it from array?
-		}
-	}
+            this.xPos += this.speed * this.xDir;
+            // if it hits the wall, remove it from array?
+        } else {
+            // update y position for vertically moving blob
+            this.yPos += this.speed * this.yDir;
+            // if it hits the wall, remove it from array?
+        }
+    }
 }
 
 function flipCoin() {
-	return random(0, 1) < 0.5;
+    return random(0, 1) < 0.5;
 }
