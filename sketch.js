@@ -31,11 +31,11 @@ function draw() {
 	player.update();
 	player.display();
 
-  for (var i = 0; i < 10; i++) {
-    blob = blobgs[i];
-    blob.update();
-    blob.display();
-  }
+	for (var i = 0; i < 10; i++) {
+		blob = blobs[i];
+		blob.update();
+		blob.display();
+	}
 }
 
 class Player {
@@ -43,13 +43,13 @@ class Player {
 		this.xPos = x;
 		this.yPos = y;
 		this.state = 0; //if lost or not
-		this.size = 5;
+		this.size = 20;
 	}
 
 	display() {
 		imageMode(CENTER);
 		fill(255, 255, 255);
-		ellipse(this.xPos, this.yPos, 20, 20);
+		ellipse(this.xPos, this.yPos, this.size, this.size);
 	}
 
 	update() {
@@ -77,32 +77,39 @@ class Player {
 class Blob {
 	constructor() {
 		this.color = color("red");
-		this.direction = random(0, 1) == 1 ? HORIZONTAL : VERTICAL;
-    this.xPos = getInitialXPos();
-    this.yPos = getInitialYPos():
-    this.xDir = getInitialXDir();
-    this.yDir = getInitialYDir();
-		this.speed = random(15, 50);
+		this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
+		this.xPos = this.getInitialXPos();
+		this.yPos = this.getInitialYPos();
+		this.xDir = this.getInitialXDir();
+		this.yDir = this.getInitialYDir();
+		this.speed = random(2, 5);
 	}
 
-  getInitialXDir() {
-    if (this.direction == HORIZONTAL) {
-    } else {
-      return
-    }
-  }
+	getInitialXDir() {
+		if (this.direction == HORIZONTAL) {
+			// either move towards the right or towards the left
+			return flipCoin() ? 1 : -1;
+		}
 
-  getInitialYDir() {
+		return 1;
+	}
 
-  }
+	getInitialYDir() {
+		if (this.direction == HORIZONTAL) {
+			return 1;
+		}
 
-  getInitialXPos() {
+		// either move upwards or downwards
+		return flipCoin() ? 1 : -1;
+	}
 
-  }
+	getInitialXPos() {
+		return 50;
+	}
 
-  getInitialYPos() {
-
-  }
+	getInitialYPos() {
+		return 50;
+	}
 
 	display() {
 		imageMode(CENTER);
@@ -110,11 +117,20 @@ class Blob {
 		ellipse(this.xPos, this.yPos, 20, 20);
 	}
 
-  update() {
-    if (this.direction == HORIZONTAL) {
-      // update x speed
-    } else {
+	update() {
+		if (this.direction == HORIZONTAL) {
+			// update x position for horizontally moving blob
 
-    }
-  }
+			this.xPos += this.speed * this.xDir;
+			// if it hits the wall, remove it from array?
+		} else {
+			// update y position for vertically moving blob
+			this.yPos += this.speed * this.yDir;
+			// if it hits the wall, remove it from array?
+		}
+	}
+}
+
+function flipCoin() {
+	return random(0, 1) < 0.5;
 }
