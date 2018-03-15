@@ -108,7 +108,6 @@ class Player {
 
 class Blob {
     constructor() {
-        this.color = color("red");
         this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
@@ -116,6 +115,18 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
+        if(this.size < 20) {
+          this.color = color("red");
+        }
+        else if(this.size < 30) {
+          this.color = color("orange");
+        }
+        else if(this.size < 40) {
+          this.color = color("green");
+        }
+        else {
+          this.color = color("blue");
+        }
     }
 
     getInitialXDir() {
@@ -201,7 +212,6 @@ class Blob {
     }
 
     restart() {
-        this.color = color("blue");
         this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
@@ -209,6 +219,18 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
+        if(this.size < 20) {
+          this.color = color("red");
+        }
+        else if(this.size < 30) {
+          this.color = color("orange");
+        }
+        else if(this.size < 40) {
+          this.color = color("green");
+        }
+        else {
+          this.color = color("blue");
+        }
     }
 }
 
