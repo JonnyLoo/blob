@@ -50,13 +50,10 @@ function draw() {
             player.restart();
         }
 
-        var shouldUpdatePoints = isHit && blob.size < player.size;
-
-        if (shouldUpdatePoints || blob.isOffscreen()) {
+        // if player eats a blob, remove that blob
+        if (isHit && blob.size < player.size) {
             points += shouldUpdatePoints ? 1 : 0
-            blobs.splice(i, 1)
-            i--;
-            blobCount--;
+            blob.restart();
         }
     }
 }
@@ -102,7 +99,6 @@ class Player {
     restart() {
         this.xPos = 250;
         this.yPos = 250;
-        this.size--;
     }
 }
 
@@ -166,6 +162,10 @@ class Blob {
             // update y position for vertically moving blob
             this.yPos += this.speed * this.yDir;
         }
+
+        if (this.isOffscreen()) {
+            this.restart();
+        }
     }
 
     isOffscreen() {
@@ -182,6 +182,17 @@ class Blob {
             return true
 
         return false
+    }
+
+    restart() {
+        this.color = color("blue");
+        this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
+        this.xPos = this.getInitialXPos();
+        this.yPos = this.getInitialYPos();
+        this.xDir = this.getInitialXDir();
+        this.yDir = this.getInitialYDir();
+        this.speed = random(0.1, 3);
+        this.size = int(random(10, 50));
     }
 }
 
