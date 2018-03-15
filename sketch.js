@@ -15,7 +15,6 @@ var VERTICAL = "vertical";
 
 // points
 var points = 0;
-var shouldUpdatePoints = false;
 
 function setup() {
     myCanvas = createCanvas(500, 500);
@@ -44,15 +43,15 @@ function draw() {
 
         var isHit = player.detectHit(blob);
 
+        // player is eaten by a blob
         if (isHit && blob.size >= player.size) {
-            // player is eaten by the blob
             points--;
             player.restart();
         }
 
         // if player eats a blob, remove that blob
         if (isHit && blob.size < player.size) {
-            points += shouldUpdatePoints ? 1 : 0
+            points++;
             blob.restart();
         }
     }
