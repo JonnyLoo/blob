@@ -7,7 +7,7 @@ var player;
 
 // array to store blobs
 var blobs = [];
-var blobCount = 20;
+var blobCount = 15;
 
 // direction
 var HORIZONTAL = "horizontal";
@@ -46,7 +46,7 @@ function draw() {
         // player is eaten by a blob
         if (isHit && blob.size >= player.size) {
             points--;
-            player.restart();
+            player.restartGame();
         }
 
         // if player eats a blob, remove that blob
@@ -95,9 +95,14 @@ class Player {
         return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < size;
     }
 
-    restart() {
+    restartGame() {
         this.xPos = 250;
         this.yPos = 250;
+
+        for (var i = 0; i < blobCount; i++) {
+            var blob = blobs[i];
+            blob.restart();
+        }
     }
 }
 
@@ -105,10 +110,10 @@ class Blob {
     constructor() {
         this.color = color("red");
         this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
-        this.xPos = this.getInitialXPos();
-        this.yPos = this.getInitialYPos();
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
+        this.xPos = this.getInitialXPos();
+        this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
     }
@@ -133,18 +138,30 @@ class Blob {
 
     getInitialXPos() {
         if (this.direction == HORIZONTAL) {
-            return flipCoin() ? -100 : 0;
+            if (this.xDir == 1) {
+                // moving right
+                return random(-50, 0)
+            } else {
+                // moving left
+                return random(500, 550)
+            }
         }
 
         return random(0, 500)
     }
 
     getInitialYPos() {
-        if (this.direction == HORIZONTAL) {
-            return random(0, 500)
+        if (this.direction == VERTICAL) {
+            if (this.yDir == 1) {
+                // moving down
+                return random(-50, 0)
+            } else {
+                // moving up
+                return random(500, 550)
+            }
         }
 
-        return flipCoin() ? -100 : 0;
+        return random(0, 500)
     }
 
     display() {
@@ -186,10 +203,10 @@ class Blob {
     restart() {
         this.color = color("blue");
         this.direction = flipCoin() ? HORIZONTAL : VERTICAL;
-        this.xPos = this.getInitialXPos();
-        this.yPos = this.getInitialYPos();
         this.xDir = this.getInitialXDir();
         this.yDir = this.getInitialYDir();
+        this.xPos = this.getInitialXPos();
+        this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
     }
