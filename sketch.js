@@ -2,7 +2,6 @@
 // python 3 server, run `python -m http.server`
 
 var myCanvas;
-var points = 0;
 var player;
 
 // array to store blobs
@@ -14,14 +13,17 @@ var HORIZONTAL = "horizontal";
 var VERTICAL = "vertical";
 
 // points
-var points = 0;
+var score;
 
 function setup() {
-    myCanvas = createCanvas(500, 500);
+    myCanvas = createCanvas(520, 500);
     myCanvas.parent("game-container");
     background(0);
+    noStroke();
+    rectMode(CORNERS);
 
     player = new Player(250, 250);
+    score = new ScoreKeeper();
 
     for (var i = 0; i < blobCount; i++) {
         var blob = new Blob();
@@ -32,7 +34,7 @@ function setup() {
 function preload() {}
 
 function draw() {
-    background(0);
+    background("#15b5b0");
     player.update();
     player.display();
 
@@ -45,15 +47,22 @@ function draw() {
 
         // player is eaten by a blob
         if (isHit && blob.size >= player.size) {
-            points--;
+            score.decr();
             player.restartGame();
         }
 
         // if player eats a blob, remove that blob
         if (isHit && blob.size < player.size) {
-            points++;
+            score.incr();
+            player.grow();
             blob.restart();
         }
+    }
+
+    score.display();
+
+    if(score.won()) {
+      //win
     }
 }
 
@@ -68,7 +77,7 @@ class Player {
 
     display() {
         imageMode(CENTER);
-        fill(255, 255, 255);
+        fill("#F7E7CE");
         ellipse(this.xPos, this.yPos, this.size, this.size);
     }
 
@@ -95,6 +104,10 @@ class Player {
         return dist(this.xPos, this.yPos, blob.xPos, blob.yPos) < size;
     }
 
+    grow() {
+      this.size += .5;
+    }
+
     restartGame() {
         this.xPos = 250;
         this.yPos = 250;
@@ -116,16 +129,16 @@ class Blob {
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
         if(this.size < 20) {
-          this.color = color("red");
+          this.color = color("#6dece0");
         }
         else if(this.size < 30) {
-          this.color = color("orange");
+          this.color = color("#fbe698");
         }
         else if(this.size < 40) {
-          this.color = color("green");
+          this.color = color("#f9bdc0");
         }
         else {
-          this.color = color("blue");
+          this.color = color("#BAECB4");
         }
     }
 
@@ -220,18 +233,43 @@ class Blob {
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
         if(this.size < 20) {
-          this.color = color("red");
+          this.color = color("#6dece0");
         }
         else if(this.size < 30) {
-          this.color = color("orange");
+          this.color = color("#fbe698");
         }
         else if(this.size < 40) {
-          this.color = color("green");
+          this.color = color("#f9bdc0");
         }
         else {
-          this.color = color("blue");
+          this.color = color("#BAECB4");
         }
     }
+}
+
+class ScoreKeeper {
+  constructor() {
+    this.points = 0;
+  }
+
+  display() {
+    fill("#006666");
+    rect(500, 0, 520, 500);
+    fill("#F7E7CE");
+    rect(500, 500 - this.points * 10, 520, 500);
+  }
+
+  incr() {
+    this.points++;
+  }
+
+  decr() {
+    this.points--;
+  }
+
+  won() {
+    return this.points > 50;
+  }
 }
 
 function flipCoin() {
