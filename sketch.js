@@ -1,6 +1,3 @@
-// python 2 server, run `python -m SimpleHTTPServer`
-// python 3 server, run `python -m http.server`
-
 var myCanvas;
 var player;
 
@@ -61,8 +58,8 @@ function draw() {
 
     score.display();
 
-    if(score.won()) {
-      //win
+    if (score.won()) {
+        //win
     }
 }
 
@@ -105,7 +102,7 @@ class Player {
     }
 
     grow() {
-      this.size += .5;
+        this.size += .5;
     }
 
     restartGame() {
@@ -128,17 +125,14 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
-        if(this.size < 20) {
-          this.color = color("#6dece0");
-        }
-        else if(this.size < 30) {
-          this.color = color("#fbe698");
-        }
-        else if(this.size < 40) {
-          this.color = color("#f9bdc0");
-        }
-        else {
-          this.color = color("#BAECB4");
+        if (this.size < 20) {
+            this.color = color("#6dece0");
+        } else if (this.size < 30) {
+            this.color = color("#fbe698");
+        } else if (this.size < 40) {
+            this.color = color("#f9bdc0");
+        } else {
+            this.color = color("#BAECB4");
         }
     }
 
@@ -232,44 +226,41 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 3);
         this.size = int(random(10, 50));
-        if(this.size < 20) {
-          this.color = color("#6dece0");
-        }
-        else if(this.size < 30) {
-          this.color = color("#fbe698");
-        }
-        else if(this.size < 40) {
-          this.color = color("#f9bdc0");
-        }
-        else {
-          this.color = color("#BAECB4");
+        if (this.size < 20) {
+            this.color = color("#6dece0");
+        } else if (this.size < 30) {
+            this.color = color("#fbe698");
+        } else if (this.size < 40) {
+            this.color = color("#f9bdc0");
+        } else {
+            this.color = color("#BAECB4");
         }
     }
 }
 
 class ScoreKeeper {
-  constructor() {
-    this.points = 0;
-  }
+    constructor() {
+        this.points = 0;
+    }
 
-  display() {
-    fill("#006666");
-    rect(500, 0, 520, 500);
-    fill("#F7E7CE");
-    rect(500, 500 - this.points * 10, 520, 500);
-  }
+    display() {
+        fill("#006666");
+        rect(500, 0, 520, 500);
+        fill("#F7E7CE");
+        rect(500, 500 - this.points * 10, 520, 500);
+    }
 
-  incr() {
-    this.points++;
-  }
+    incr() {
+        this.points++;
+    }
 
-  decr() {
-    this.points--;
-  }
+    decr() {
+        this.points--;
+    }
 
-  won() {
-    return this.points > 50;
-  }
+    won() {
+        return this.points > 50;
+    }
 }
 
 function flipCoin() {
