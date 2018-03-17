@@ -18,7 +18,8 @@ python -m http.server
 - [x] have a win screen
 - [x] main menu / pause button
 - [x] make a bit more diffcult? (feels kinda easy)
-- [x] lose condition / screen + shrinking player + losing points display
+- [x] lose condition / screen
+- [ ] shrinking player + losing points display
 - [x] cheat menu (w to win, l to lose, r to restart)
 - [ ] sometimes progress bar doesn't update (but you still gain or lose points)
 - [ ] add music

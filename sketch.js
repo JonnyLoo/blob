@@ -1,5 +1,6 @@
 var myCanvas;
 var player;
+var state = 1;
 
 // array to store blobs
 var blobs = [];
@@ -60,6 +61,13 @@ function draw() {
         score.reset();
         player.reset();
       }
+  }
+  else if(state == 2) {
+    background("#15b5b0");
+    textSize(20);
+    fill('#F7E7CE');
+    text("PAUSED", 210, 220);
+    text("PRESS P TO RESUME", 120, 270);
   }
   else if(score.lost()) {
     background("#15b5b0");
@@ -334,4 +342,20 @@ class ScoreKeeper {
 
 function flipCoin() {
     return random(0, 1) < 0.5;
+}
+
+function keyPressed() {
+  // if p is pressed, pause game
+  if (keyCode == 80) {
+    if (state == 2) {
+      loop();
+      state = 1;
+    }
+    else if (state == 1) {
+
+      noLoop();
+      state = 2;
+
+    }
+  }
 }
