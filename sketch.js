@@ -11,6 +11,7 @@ var VERTICAL = "vertical";
 
 // points
 var score;
+var blobSize;
 
 var font;
 
@@ -23,6 +24,7 @@ function setup() {
 
     player = new Player(250, 250);
     score = new ScoreKeeper();
+    blobSize = 10;
 
     for (var i = 0; i < blobCount; i++) {
         var blob = new Blob();
@@ -85,7 +87,7 @@ function draw() {
 
         // player is eaten by a blob
         if (isHit && blob.size >= player.size) {
-            score.decr();
+            score.loseDecr();
             player.shrink();
             player.restartGame();
         }
@@ -171,8 +173,8 @@ class Blob {
         this.yDir = this.getInitialYDir();
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
-        this.speed = random(0.1, 4.1);
-        this.size = int(random(10, 50));
+        this.speed = random(0.1, 1.1);
+        this.size = int(random(blobSize, blobSize + 40));
         if (this.size < 20) {
             this.color = color("#6dece0");
         } else if (this.size < 30) {
@@ -273,7 +275,7 @@ class Blob {
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 4.1);
-        this.size = int(random(10, 50));
+        this.size = int(random(blobSize, blobSize + 40));
         if (this.size < 20) {
             this.color = color("#6dece0");
         } else if (this.size < 30) {
@@ -306,10 +308,15 @@ class ScoreKeeper {
 
     incr() {
         this.points++;
+        blobSize += .25;
     }
 
     decr() {
         this.points--;
+    }
+
+    loseDecr() {
+      this.points = -10;
     }
 
     won() {
