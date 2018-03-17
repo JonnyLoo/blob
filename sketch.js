@@ -127,8 +127,11 @@ class Player {
 
     display() {
         imageMode(CENTER);
-        fill("#F7E7CE");
+        strokeWeight(3)
+        stroke('black')
+        fill('#F7E7CE');
         ellipse(this.xPos, this.yPos, this.size, this.size);
+        noStroke();
     }
 
     update() {
@@ -191,14 +194,10 @@ class Blob {
     }
 
     getColor() {
-        if (this.size < 20) {
-            return "#6dece0";
-        } else if (this.size < 30) {
+        if (this.size < player.size) {
             return "#fbe698";
-        } else if (this.size < 40) {
-            return "#f9bdc0";
         } else {
-            return "#BAECB4";
+            return "#f9bdc0";
         }
     }
 
@@ -302,7 +301,9 @@ class ScoreKeeper {
     }
 
     display() {
+        textSize(7);
         fill("#006666");
+        text("score: " + this.points, 440, 490);
         rect(500, 0, 520, 500);
         if (this.points >= 0) {
             fill("#F7E7CE");

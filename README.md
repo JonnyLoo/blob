@@ -13,7 +13,7 @@ python -m http.server
 ## to-dos
 - [x] update logic so that player eats smaller blob but is eaten by bigger blob
 - [x] make blobs appear endlessly
-- [x] make is obvious which blobs are smaller / which is larger (color)
+- [x] make is obvious which blobs are smaller / which is larger than player (color)
 - [x] score keeping / display
 - [x] have a win screen
 - [x] main menu / pause button
