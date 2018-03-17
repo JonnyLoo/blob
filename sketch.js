@@ -3,7 +3,8 @@ var player;
 
 // array to store blobs
 var blobs = [];
-var blobCount = 15;
+var blobCount = 10;
+var blobSize = 10;
 
 // direction
 var HORIZONTAL = "horizontal";
@@ -11,8 +12,6 @@ var VERTICAL = "vertical";
 
 // points
 var score;
-var blobSize;
-
 var font;
 
 //images
@@ -43,7 +42,6 @@ function setup() {
 
     player = new Player(250, 250);
     score = new ScoreKeeper();
-    blobSize = 10;
 
     for (var i = 0; i < blobCount; i++) {
         var blob = new Blob();
@@ -80,7 +78,7 @@ function draw() {
 
             // player is eaten by a blob
             if (isHit && blob.size >= player.size) {
-                score.loseDecr();
+                score.decr();
                 player.shrink();
                 player.restartGame();
                 splat.play();
@@ -122,7 +120,7 @@ class Player {
         this.yPos = y;
         this.state = 0; //if lost or not
         this.size = 20;
-        this.speed = 2;
+        this.speed = 3;
     }
 
     display() {
@@ -337,20 +335,6 @@ class ScoreKeeper {
 
     reset() {
         this.points = 0;
-    }
-
-    paused() {
-        return this.stat
-    }
-
-    state() {
-        if (this.won()) {
-            return 'WON'
-        }
-
-        if (this.lost()) {
-            return 'LOST'
-        }
     }
 }
 
