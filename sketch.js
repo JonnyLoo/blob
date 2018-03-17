@@ -16,6 +16,16 @@ var blobSize;
 
 var font;
 
+//images
+
+//sounds
+var splat;
+
+function preload() {
+  font = loadFont('font.ttf');
+  splat = loadSound('splat.mp3');
+}
+
 function setup() {
     myCanvas = createCanvas(520, 500);
     myCanvas.parent("game-container");
@@ -33,10 +43,6 @@ function setup() {
     }
 
     textFont(font);
-}
-
-function preload() {
-  font = loadFont('font.ttf');
 }
 
 function draw() {
@@ -98,6 +104,7 @@ function draw() {
             score.loseDecr();
             player.shrink();
             player.restartGame();
+            splat.play();
         }
 
         // if player eats a blob, remove that blob
@@ -105,6 +112,7 @@ function draw() {
             score.incr();
             player.grow();
             blob.restart();
+            splat.play();
         }
     }
 

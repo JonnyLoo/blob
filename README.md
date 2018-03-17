@@ -22,4 +22,5 @@ python -m http.server
 - [ ] shrinking player + losing points display
 - [x] cheat menu (w to win, l to lose, r to restart)
 - [ ] sometimes progress bar doesn't update (but you still gain or lose points)
-- [ ] add music
+- [x] add music (could add more still??)
+- [ ] add external artwork
