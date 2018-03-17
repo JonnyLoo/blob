@@ -12,6 +12,8 @@ var VERTICAL = "vertical";
 // points
 var score;
 
+var font;
+
 function setup() {
     myCanvas = createCanvas(520, 500);
     myCanvas.parent("game-container");
@@ -26,11 +28,50 @@ function setup() {
         var blob = new Blob();
         blobs.push(blob);
     }
+
+    textFont(font);
 }
 
-function preload() {}
+function preload() {
+  font = loadFont('font.ttf');
+}
 
 function draw() {
+  //cheats
+  if(keyIsDown(87)) {
+    //instant win
+    score.points = 50;
+  }
+  if(keyIsDown(76)) {
+    //instant lose
+    score.points = -10;
+  }
+
+  if (score.won()) {
+      background("#15b5b0");
+      textSize(20);
+      fill('#F7E7CE');
+      text("YOU WIN", 210, 220);
+      text("PRESS R TO RESTART", 120, 270);
+
+      if(keyIsDown(82)) {
+        score.reset();
+        player.reset();
+      }
+  }
+  else if(score.lost()) {
+    background("#15b5b0");
+    textSize(20);
+    fill('#f9bdc0');
+    text("YOU LOSE", 195, 220);
+    text("PRESS R TO RESTART", 120, 270);
+
+    if(keyIsDown(82)) {
+      score.reset();
+      player.reset();
+    }
+  }
+  else {
     background("#15b5b0");
     player.update();
     player.display();
@@ -45,6 +86,7 @@ function draw() {
         // player is eaten by a blob
         if (isHit && blob.size >= player.size) {
             score.decr();
+            player.shrink();
             player.restartGame();
         }
 
@@ -57,10 +99,7 @@ function draw() {
     }
 
     score.display();
-
-    if (score.won()) {
-        //win
-    }
+  }
 }
 
 class Player {
@@ -68,7 +107,7 @@ class Player {
         this.xPos = x;
         this.yPos = y;
         this.state = 0; //if lost or not
-        this.size = 30;
+        this.size = 20;
         this.speed = 2;
     }
 
@@ -105,6 +144,10 @@ class Player {
         this.size += .5;
     }
 
+    shrink() {
+      this.size -= .5;
+    }
+
     restartGame() {
         this.xPos = 250;
         this.yPos = 250;
@@ -113,6 +156,11 @@ class Player {
             var blob = blobs[i];
             blob.restart();
         }
+    }
+
+    reset() {
+      this.restartGame();
+      this.size = 20;
     }
 }
 
@@ -123,7 +171,7 @@ class Blob {
         this.yDir = this.getInitialYDir();
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
-        this.speed = random(0.1, 3);
+        this.speed = random(0.1, 4.1);
         this.size = int(random(10, 50));
         if (this.size < 20) {
             this.color = color("#6dece0");
@@ -224,7 +272,7 @@ class Blob {
         this.yDir = this.getInitialYDir();
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
-        this.speed = random(0.1, 3);
+        this.speed = random(0.1, 4.1);
         this.size = int(random(10, 50));
         if (this.size < 20) {
             this.color = color("#6dece0");
@@ -246,8 +294,14 @@ class ScoreKeeper {
     display() {
         fill("#006666");
         rect(500, 0, 520, 500);
-        fill("#F7E7CE");
-        rect(500, 500 - this.points * 10, 520, 500);
+        if(this.points >= 0) {
+          fill("#F7E7CE");
+          rect(500, 500 - this.points * 10, 520, 500);
+        }
+        else {
+          fill('#BE7BEA');
+          rect(500, 0, 520, this.points * -50);
+        }
     }
 
     incr() {
@@ -259,7 +313,15 @@ class ScoreKeeper {
     }
 
     won() {
-        return this.points > 50;
+        return this.points >= 50;
+    }
+
+    lost() {
+        return this.points <= -10;
+    }
+
+    reset() {
+        this.points = 0;
     }
 }
 

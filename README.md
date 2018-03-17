@@ -15,7 +15,10 @@ python -m http.server
 - [x] make blobs appear endlessly
 - [x] make is obvious which blobs are smaller / which is larger (color)
 - [x] score keeping / display
-- [ ] have a win screen
-- [ ] main menu / pause button
-- [ ] make a bit more diffcult? (feels kinda easy)
-- [ ] cheat menu for easier testing?
+- [x] have a win screen
+- [x] main menu / pause button
+- [x] make a bit more diffcult? (feels kinda easy)
+- [x] lose condition / screen + shrinking player + losing points display
+- [x] cheat menu (w to win, l to lose, r to restart)
+- [ ] sometimes progress bar doesn't update (but you still gain or lose points)
+- [ ] add music
