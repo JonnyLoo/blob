@@ -20,10 +20,12 @@ var font;
 
 //sounds
 var splat;
+var pop;
 
 function preload() {
   font = loadFont('font.ttf');
   splat = loadSound('splat.mp3');
+  pop = loadSound('pop.mp3');
 }
 
 function setup() {
@@ -112,7 +114,7 @@ function draw() {
             score.incr();
             player.grow();
             blob.restart();
-            splat.play();
+            pop.play();
         }
     }
 
