@@ -1,6 +1,5 @@
 var myCanvas;
 var player;
-var state = 1;
 
 // array to store blobs
 var blobs = [];
@@ -22,18 +21,25 @@ var font;
 var splat;
 var pop;
 
+// states
+var PLAYING = 1;
+var PAUSED = 2;
+var state = PLAYING;
+
 function preload() {
-  font = loadFont('font.ttf');
-  splat = loadSound('splat.mp3');
-  pop = loadSound('pop.mp3');
+    font = loadFont('assets/font.ttf');
+    splat = loadSound('assets/splat.mp3');
+    pop = loadSound('assets/pop.mp3');
 }
 
 function setup() {
     myCanvas = createCanvas(520, 500);
     myCanvas.parent("game-container");
+
     background(0);
     noStroke();
     rectMode(CORNERS);
+    textFont(font);
 
     player = new Player(250, 250);
     score = new ScoreKeeper();
@@ -43,83 +49,71 @@ function setup() {
         var blob = new Blob();
         blobs.push(blob);
     }
-
-    textFont(font);
 }
 
 function draw() {
-  //cheats
-  if(keyIsDown(87)) {
-    //instant win
-    score.points = 50;
-  }
-  if(keyIsDown(76)) {
-    //instant lose
-    score.points = -10;
-  }
-
-  if (score.won()) {
-      background("#15b5b0");
-      textSize(20);
-      fill('#F7E7CE');
-      text("YOU WIN", 210, 220);
-      text("PRESS R TO RESTART", 120, 270);
-
-      if(keyIsDown(82)) {
-        score.reset();
-        player.reset();
-      }
-  }
-  else if(state == 2) {
     background("#15b5b0");
     textSize(20);
+
+    //cheats
+    if (keyIsDown(87)) {
+        // W -> instant win
+        score.points = 50;
+    }
+    if (keyIsDown(76)) {
+        // L -> instant lose
+        score.points = -10;
+    }
+
+    if (score.won() || (state == PAUSED) || score.lost()) {
+        handleGamePausedOrEnd(score, state);
+    } else {
+        player.update();
+        player.display();
+
+        for (var i = 0; i < blobCount; i++) {
+            blob = blobs[i];
+            blob.update();
+            blob.display();
+
+            var isHit = player.detectHit(blob);
+
+            // player is eaten by a blob
+            if (isHit && blob.size >= player.size) {
+                score.loseDecr();
+                player.shrink();
+                player.restartGame();
+                splat.play();
+            }
+
+            // if player eats a blob, remove that blob
+            if (isHit && blob.size < player.size) {
+                score.incr();
+                player.grow();
+                blob.restart();
+                pop.play();
+            }
+        }
+
+        score.display();
+    }
+}
+
+function handleGamePausedOrEnd(score, state) {
+    var message = ''
+    if (score.won()) {
+        message = 'YOU WIN';
+    } else if (state == PAUSED) {
+        message = 'PAUSED'
+    } else {
+        message = 'YOU LOSE'
+    }
+
+    background("#15b5b0");
     fill('#F7E7CE');
-    text("PAUSED", 210, 220);
-    text("PRESS P TO RESUME", 120, 270);
-  }
-  else if(score.lost()) {
-    background("#15b5b0");
-    textSize(20);
-    fill('#f9bdc0');
-    text("YOU LOSE", 195, 220);
-    text("PRESS R TO RESTART", 120, 270);
-
-    if(keyIsDown(82)) {
-      score.reset();
-      player.reset();
-    }
-  }
-  else {
-    background("#15b5b0");
-    player.update();
-    player.display();
-
-    for (var i = 0; i < blobCount; i++) {
-        blob = blobs[i];
-        blob.update();
-        blob.display();
-
-        var isHit = player.detectHit(blob);
-
-        // player is eaten by a blob
-        if (isHit && blob.size >= player.size) {
-            score.loseDecr();
-            player.shrink();
-            player.restartGame();
-            splat.play();
-        }
-
-        // if player eats a blob, remove that blob
-        if (isHit && blob.size < player.size) {
-            score.incr();
-            player.grow();
-            blob.restart();
-            pop.play();
-        }
-    }
-
-    score.display();
-  }
+    text(message, 210, 220);
+    text((state == PAUSED) ? "PRESS P TO RESUME" : "PRESS R TO RESTART", 120, 270);
+    restartIfKeyPressed();
 }
 
 class Player {
@@ -165,7 +159,7 @@ class Player {
     }
 
     shrink() {
-      this.size -= .5;
+        this.size -= .5;
     }
 
     restartGame() {
@@ -179,8 +173,8 @@ class Player {
     }
 
     reset() {
-      this.restartGame();
-      this.size = 20;
+        this.restartGame();
+        this.size = 20;
     }
 }
 
@@ -193,14 +187,18 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 1.1);
         this.size = int(random(blobSize, blobSize + 40));
+        this.color = color(this.getColor());
+    }
+
+    getColor() {
         if (this.size < 20) {
-            this.color = color("#6dece0");
+            return "#6dece0";
         } else if (this.size < 30) {
-            this.color = color("#fbe698");
+            return "#fbe698";
         } else if (this.size < 40) {
-            this.color = color("#f9bdc0");
+            return "#f9bdc0";
         } else {
-            this.color = color("#BAECB4");
+            return "#BAECB4";
         }
     }
 
@@ -294,15 +292,7 @@ class Blob {
         this.yPos = this.getInitialYPos();
         this.speed = random(0.1, 4.1);
         this.size = int(random(blobSize, blobSize + 40));
-        if (this.size < 20) {
-            this.color = color("#6dece0");
-        } else if (this.size < 30) {
-            this.color = color("#fbe698");
-        } else if (this.size < 40) {
-            this.color = color("#f9bdc0");
-        } else {
-            this.color = color("#BAECB4");
-        }
+        this.color = color(this.getColor());
     }
 }
 
@@ -314,13 +304,12 @@ class ScoreKeeper {
     display() {
         fill("#006666");
         rect(500, 0, 520, 500);
-        if(this.points >= 0) {
-          fill("#F7E7CE");
-          rect(500, 500 - this.points * 10, 520, 500);
-        }
-        else {
-          fill('#BE7BEA');
-          rect(500, 0, 520, this.points * -50);
+        if (this.points >= 0) {
+            fill("#F7E7CE");
+            rect(500, 500 - this.points * 10, 520, 500);
+        } else {
+            fill('#BE7BEA');
+            rect(500, 0, 520, this.points * -50);
         }
     }
 
@@ -334,7 +323,7 @@ class ScoreKeeper {
     }
 
     loseDecr() {
-      this.points = -10;
+        this.points = -10;
     }
 
     won() {
@@ -348,6 +337,20 @@ class ScoreKeeper {
     reset() {
         this.points = 0;
     }
+
+    paused() {
+        return this.stat
+    }
+
+    state() {
+        if (this.won()) {
+            return 'WON'
+        }
+
+        if (this.lost()) {
+            return 'LOST'
+        }
+    }
 }
 
 function flipCoin() {
@@ -355,17 +358,21 @@ function flipCoin() {
 }
 
 function keyPressed() {
-  // if p is pressed, pause game
-  if (keyCode == 80) {
-    if (state == 2) {
-      loop();
-      state = 1;
+    // if p is pressed, pause game
+    if (keyCode == 80) {
+        if (state == PAUSED) {
+            loop();
+            state = PLAYING;
+        } else if (state == PLAYING) {
+            noLoop();
+            state = PAUSED;
+        }
     }
-    else if (state == 1) {
+}
 
-      noLoop();
-      state = 2;
-
+function restartIfKeyPressed() {
+    if (keyIsDown(82)) {
+        score.reset();
+        player.reset();
     }
-  }
 }
