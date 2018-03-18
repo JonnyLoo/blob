@@ -6,7 +6,7 @@ var blobs = [];
 var blobCount = 10;
 var blobSize = 10;
 
-//speed
+//blob speed
 var blobSpeed = 2;
 var FAST = 3;
 var MEDIUM = 2;
@@ -115,11 +115,11 @@ function draw() {
 function handleGamePausedOrEnd(score, state) {
     var message = ''
     if (score.won()) {
-        message = 'YOU WIN';
+        message = 'YOU WIN!!!';
     } else if (state == PAUSED) {
         message = 'PAUSED'
     } else {
-        message = 'YOU LOSE'
+        message = 'YOU LOSE :()'
     }
 
     background("#15b5b0");
@@ -135,32 +135,48 @@ class Player {
         this.yPos = y;
         this.state = 0; //if lost or not
         this.size = 20;
-        this.speed = 3;
+        //this.speed = 3;
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+        this.accel = 0.1;
     }
 
     display() {
         imageMode(CENTER);
         image(smile, this.xPos, this.yPos, this.size, this.size);
         strokeWeight(3);
-        // stroke('black');
-        // fill('#F7E7CE');
-        // ellipse(this.xPos, this.yPos, this.size, this.size);
         noStroke();
     }
 
     update() {
-        if (keyIsDown(UP_ARROW) && this.yPos > (0 + this.size / 2)) {
-            this.yPos -= this.speed;
+        //change speed based on acceleration
+        if (keyIsDown(UP_ARROW)) {
+            this.ySpeed -= this.accel;
         }
-        if (keyIsDown(DOWN_ARROW) && this.yPos < (500 - this.size / 2)) {
-            this.yPos += this.speed;
+        if (keyIsDown(DOWN_ARROW)) {
+            this.ySpeed += this.accel;
         }
-        if (keyIsDown(LEFT_ARROW) && this.xPos > (0 + this.size / 2)) {
-            this.xPos -= this.speed;
+        if (keyIsDown(LEFT_ARROW)) {
+            this.xSpeed -= this.accel;
         }
-        if (keyIsDown(RIGHT_ARROW) && this.xPos < (500 - this.size / 2)) {
-            this.xPos += this.speed;
+        if (keyIsDown(RIGHT_ARROW)) {
+            this.xSpeed += this.accel;
         }
+
+        //change position based on speed
+        this.xPos += this.xSpeed;
+        this.yPos += this.ySpeed;
+
+        //handle borders
+        if (this.xPos < (0 + this.size / 2))
+          this.xPos = (500 - this.size / 2);
+        if (this.xPos > (500 - this.size / 2))
+          this.xPos = (0 + this.size / 2);
+        if(this.yPos < (0 + this.size / 2))
+          this.yPos = (500 - this.size / 2);
+        if(this.yPos > (500 - this.size / 2))
+          this.yPos = (0 + this.size / 2);
+
     }
 
     detectHit(blob) {
