@@ -6,6 +6,12 @@ var blobs = [];
 var blobCount = 10;
 var blobSize = 10;
 
+//speed
+var blobSpeed = 2;
+var FAST = 3;
+var MEDIUM = 2;
+var SLOW = 1;
+
 // direction
 var HORIZONTAL = "horizontal";
 var VERTICAL = "vertical";
@@ -29,11 +35,16 @@ function preload() {
     font = loadFont('assets/font.ttf');
     splat = loadSound('assets/splat.mp3');
     pop = loadSound('assets/pop.mp3');
+    smile = loadImage('assets/smile.png')
 }
 
 function setup() {
     myCanvas = createCanvas(520, 500);
     myCanvas.parent("game-container");
+
+    // set slider
+    slider = createSlider(1, 3, 2);
+    slider.parent('speedSlider');
 
     background(0);
     noStroke();
@@ -66,6 +77,10 @@ function draw() {
     if (score.won() || (state == PAUSED) || score.lost()) {
         handleGamePausedOrEnd(score, state);
     } else {
+        if(blobSpeed !== slider.value()){
+          blobSpeed = slider.value();
+          blob.restart();
+        }
         player.update();
         player.display();
 
@@ -125,10 +140,11 @@ class Player {
 
     display() {
         imageMode(CENTER);
-        strokeWeight(3)
-        stroke('black')
-        fill('#F7E7CE');
-        ellipse(this.xPos, this.yPos, this.size, this.size);
+        image(smile, this.xPos, this.yPos, this.size, this.size);
+        strokeWeight(3);
+        // stroke('black');
+        // fill('#F7E7CE');
+        // ellipse(this.xPos, this.yPos, this.size, this.size);
         noStroke();
     }
 
@@ -186,7 +202,15 @@ class Blob {
         this.yDir = this.getInitialYDir();
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
-        this.speed = random(0.1, 1.1);
+        if(blobSpeed == FAST) {
+          this.speed = random(2, 3.1);
+        }
+        else if(blobSpeed == SLOW) {
+          this.speed = random(0.1, 0.3);
+        }
+        else {
+          this.speed = random(0.1, 2);
+        }
         this.size = int(random(blobSize, blobSize + 40));
         this.color = color(this.getColor());
     }
