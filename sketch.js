@@ -32,10 +32,10 @@ var PAUSED = 2;
 var state = PLAYING;
 
 function preload() {
-    font = loadFont('assets/font.ttf');
-    splat = loadSound('assets/splat.mp3');
-    pop = loadSound('assets/pop.mp3');
-    smile = loadImage('assets/smile.png')
+    font = loadFont("assets/font.ttf");
+    splat = loadSound("assets/splat.mp3");
+    pop = loadSound("assets/pop.mp3");
+    smile = loadImage("assets/smile.png");
 }
 
 function setup() {
@@ -44,7 +44,7 @@ function setup() {
 
     // set slider
     slider = createSlider(1, 3, 2);
-    slider.parent('speedSlider');
+    slider.parent("speedSlider");
 
     background(0);
     noStroke();
@@ -74,12 +74,12 @@ function draw() {
         score.points = -10;
     }
 
-    if (score.won() || (state == PAUSED) || score.lost()) {
+    if (score.won() || state == PAUSED || score.lost()) {
         handleGamePausedOrEnd(score, state);
     } else {
-        if(blobSpeed !== slider.value()){
-          blobSpeed = slider.value();
-          blob.restart();
+        if (blobSpeed !== slider.value()) {
+            blobSpeed = slider.value();
+            blob.restart();
         }
         player.update();
         player.display();
@@ -113,19 +113,23 @@ function draw() {
 }
 
 function handleGamePausedOrEnd(score, state) {
-    var message = ''
+    var message = "";
     if (score.won()) {
-        message = 'YOU WIN!!!';
+        message = "YOU WIN!!!";
     } else if (state == PAUSED) {
-        message = 'PAUSED'
+        message = "PAUSED";
     } else {
-        message = 'YOU LOSE :()'
+        message = "YOU LOSE :()";
     }
 
     background("#15b5b0");
-    fill('#F7E7CE');
+    fill("#F7E7CE");
     text(message, 210, 220);
-    text((state == PAUSED) ? "PRESS P TO RESUME" : "PRESS R TO RESTART", 120, 270);
+    text(
+        state == PAUSED ? "PRESS P TO RESUME" : "PRESS R TO RESTART",
+        120,
+        270
+    );
     restartIfKeyPressed();
 }
 
@@ -135,10 +139,9 @@ class Player {
         this.yPos = y;
         this.state = 0; //if lost or not
         this.size = 20;
-        //this.speed = 3;
         this.xSpeed = 0;
         this.ySpeed = 0;
-        this.accel = 0.1;
+        this.accel = 0.05;
     }
 
     display() {
@@ -168,15 +171,10 @@ class Player {
         this.yPos += this.ySpeed;
 
         //handle borders
-        if (this.xPos < (0 + this.size / 2))
-          this.xPos = (500 - this.size / 2);
-        if (this.xPos > (500 - this.size / 2))
-          this.xPos = (0 + this.size / 2);
-        if(this.yPos < (0 + this.size / 2))
-          this.yPos = (500 - this.size / 2);
-        if(this.yPos > (500 - this.size / 2))
-          this.yPos = (0 + this.size / 2);
-
+        if (this.xPos < 0 + this.size / 2) this.xPos = 500 - this.size / 2;
+        if (this.xPos > 500 - this.size / 2) this.xPos = 0 + this.size / 2;
+        if (this.yPos < 0 + this.size / 2) this.yPos = 500 - this.size / 2;
+        if (this.yPos > 500 - this.size / 2) this.yPos = 0 + this.size / 2;
     }
 
     detectHit(blob) {
@@ -188,11 +186,11 @@ class Player {
     }
 
     grow() {
-        this.size += .5;
+        this.size += 0.5;
     }
 
     shrink() {
-        this.size -= .5;
+        this.size -= 0.5;
     }
 
     restartGame() {
@@ -218,14 +216,12 @@ class Blob {
         this.yDir = this.getInitialYDir();
         this.xPos = this.getInitialXPos();
         this.yPos = this.getInitialYPos();
-        if(blobSpeed == FAST) {
-          this.speed = random(2, 3.1);
-        }
-        else if(blobSpeed == SLOW) {
-          this.speed = random(0.1, 0.3);
-        }
-        else {
-          this.speed = random(0.1, 2);
+        if (blobSpeed == FAST) {
+            this.speed = random(2, 3.1);
+        } else if (blobSpeed == SLOW) {
+            this.speed = random(0.1, 0.3);
+        } else {
+            this.speed = random(0.1, 2);
         }
         this.size = int(random(blobSize, blobSize + 40));
         this.color = color(this.getColor());
@@ -261,28 +257,28 @@ class Blob {
         if (this.direction == HORIZONTAL) {
             if (this.xDir == 1) {
                 // moving right
-                return random(-50, 0)
+                return random(-50, 0);
             } else {
                 // moving left
-                return random(500, 550)
+                return random(500, 550);
             }
         }
 
-        return random(0, 500)
+        return random(0, 500);
     }
 
     getInitialYPos() {
         if (this.direction == VERTICAL) {
             if (this.yDir == 1) {
                 // moving down
-                return random(-50, 0)
+                return random(-50, 0);
             } else {
                 // moving up
-                return random(500, 550)
+                return random(500, 550);
             }
         }
 
-        return random(0, 500)
+        return random(0, 500);
     }
 
     display() {
@@ -306,19 +302,15 @@ class Blob {
     }
 
     isOffscreen() {
-        if (this.xDir == 1 && this.xPos >= 500)
-            return true
+        if (this.xDir == 1 && this.xPos >= 500) return true;
 
-        if (this.xDir == -1 && this.xPos <= 0)
-            return true
+        if (this.xDir == -1 && this.xPos <= 0) return true;
 
-        if (this.yDir == 1 && this.yPos >= 500)
-            return true
+        if (this.yDir == 1 && this.yPos >= 500) return true;
 
-        if (this.yDir == -1 && this.yPos <= 0)
-            return true
+        if (this.yDir == -1 && this.yPos <= 0) return true;
 
-        return false
+        return false;
     }
 
     restart() {
@@ -347,14 +339,14 @@ class ScoreKeeper {
             fill("#F7E7CE");
             rect(500, 500 - this.points * 10, 520, 500);
         } else {
-            fill('#BE7BEA');
+            fill("#BE7BEA");
             rect(500, 0, 520, this.points * -50);
         }
     }
 
     incr() {
         this.points++;
-        blobSize += .25;
+        blobSize += 0.25;
     }
 
     decr() {
